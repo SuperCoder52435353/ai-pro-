@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Pro Converter | Ultimate Professional File Converter</title>
+    <meta name="description" content="Professional AI-powered file converter supporting Excel, Word, PDF, and more">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+    <!-- Animated Background -->
+    <canvas id="particles"></canvas>
+    <div class="gradient-bg"></div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="page">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="logo-animation">
+                    <svg viewBox="0 0 100 100" width="80" height="80">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M30 50 L45 65 L70 35" fill="none" stroke="url(#grad1)" stroke-width="4" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1>AI Pro Converter</h1>
+                <p>Ultimate Professional File Conversion System</p>
+            </div>
+            
+            <div class="login-form">
+                <div class="input-group">
+                    <input type="text" id="usernameInput" placeholder="Username" autocomplete="username">
+                    <span class="input-icon">👤</span>
+                </div>
+                
+                <div class="input-group">
+                    <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password">
+                    <span class="input-icon">🔒</span>
+                </div>
+                
+                <div class="remember-group">
+                    <label>
+                        <input type="checkbox" id="rememberMe">
+                        <span>Meni eslab qol</span>
+                    </label>
+                </div>
+                
+                <button onclick="Auth.login()" class="btn-primary">
+                    <span>Kirish</span>
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="login-footer">
+                <p>🚀 Ultimate converter supporting 15+ file formats</p>
+                <p style="margin-top: 10px; font-size: 11px; opacity: 0.7;">v2.0 - AI Powered</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="page hidden">
+        <div class="app-container">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <div class="logo-small">
+                        <svg viewBox="0 0 100 100" width="40" height="40">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="url(#grad2)" stroke-width="3"/>
+                            <path d="M30 50 L45 65 L70 35" fill="none" stroke="url(#grad2)" stroke-width="4"/>
+                            <defs>
+                                <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea"/>
+                                    <stop offset="100%" style="stop-color:#764ba2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <h2>AI Pro Converter</h2>
+                </div>
+                <div class="header-right">
+                    <button onclick="ChatWithAdmin.openChat()" class="btn-chat" title="Admin bilan chat">
+                        💬 <span id="unreadCount" class="badge hidden">0</span>
+                    </button>
+                    <div class="user-info">
+                        <span id="currentUsername">User</span>
+                    </div>
+                    <button onclick="Auth.logout()" class="btn-logout">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-icon">📁</div>
+                    <div class="stat-content">
+                        <span class="stat-value" id="fileCount">0</span>
+                        <span class="stat-label">Fayllar</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🔄</div>
+                    <div class="stat-content">
+                        <span class="stat-value" id="convertCount">0</span>
+                        <span class="stat-label">Konvertlar</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-content">
+                        <span class="stat-value" id="msgCount">0</span>
+                        <span class="stat-label">Xabarlar</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Chat Area -->
+                <div class="chat-section">
+                    <div class="chat-header">
+                        <h3>🤖 AI Assistant</h3>
+                        <button onclick="AI.clearChat()" class="btn-clear">Tozalash</button>
+                    </div>
+                    <div id="chatContainer" class="chat-container"></div>
+                    <div id="chatLoader" class="chat-loader hidden">
+                        <div class="typing-indicator">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="messageInput" placeholder="AI ga savol bering..." onkeypress="if(event.key==='Enter') AI.sendMessage()">
+                        <button onclick="AI.sendMessage()" class="btn-send">
+                            <svg viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Converter Area -->
+                <div class="converter-section">
+                    <div class="upload-area">
+                        <input type="file" id="fileInput" hidden accept=".xlsx,.xls,.csv,.docx,.pdf,.txt,.doc,.html,.css,.js,.json,.xml,.pptx,.png,.jpg,.jpeg">
+                        <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                            <div class="upload-icon">
+                                <svg viewBox="0 0 24 24" width="60" height="60">
+                                    <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                                </svg>
+                            </div>
+                            <h3>Faylni yuklang</h3>
+                            <p>yoki shu yerga tashlang</p>
+                            <span class="supported-formats">Excel, Word, PDF, CSV, TXT, HTML, CSS, JS, JSON, PowerPoint</span>
+                        </div>
+                    </div>
+
+                    <div id="fileResult" class="file-result hidden"></div>
+
+                    <div id="formatOptions" class="format-options hidden"></div>
+
+                    <div id="progressBar" class="progress-bar hidden">
+                        <div id="progressFill" class="progress-fill"></div>
+                        <span id="progressText">Converting...</span>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <button onclick="AI.showHelp()" class="btn-help">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                            </svg>
+                            Yordam
+                        </button>
+                        <button onclick="AI.showGuide()" class="btn-guide">
+                            📖 Qo'llanma
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="page hidden">
+        <div class="admin-container">
+            <header class="admin-header">
+                <h1>🛡️ Admin Control Panel</h1>
+                <div class="admin-actions">
+                    <button onclick="Admin.refreshAll()" class="btn-refresh">🔄 Yangilash</button>
+                    <button onclick="Auth.logout()" class="btn-logout">Exit</button>
+                </div>
+            </header>
+
+            <div class="admin-stats">
+                <div class="admin-stat-card">
+                    <div class="stat-icon-large">👥</div>
+                    <h3 id="totalUsers">0</h3>
+                    <p>Total Users</p>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="stat-icon-large">🔄</div>
+                    <h3 id="totalConversions">0</h3>
+                    <p>Conversions</p>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="stat-icon-large">💬</div>
+                    <h3 id="totalMessages">0</h3>
+                    <p>Messages</p>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="stat-icon-large">📧</div>
+                    <h3 id="pendingChats">0</h3>
+                    <p>Pending Chats</p>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="Admin.showTab('users')">👥 Users</button>
+                <button class="tab-btn" onclick="Admin.showTab('logs')">📋 Logs</button>
+                <button class="tab-btn" onclick="Admin.showTab('chats')">💬 Chats</button>
+                <button class="tab-btn" onclick="Admin.showTab('settings')">⚙️ Settings</button>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="usersTab" class="admin-tab active">
+                <div class="search-bar">
+                    <input type="text" id="userSearch" placeholder="Foydalanuvchini qidirish..." onkeyup="Admin.searchUsers()">
+                </div>
+                <div id="usersContainer" class="users-list"></div>
+            </div>
+
+            <!-- Logs Tab -->
+            <div id="logsTab" class="admin-tab hidden">
+                <div class="filter-bar">
+                    <select id="logFilter" onchange="Admin.filterLogs()">
+                        <option value="all">Barchasi</option>
+                        <option value="login">Login</option>
+                        <option value="convert">Convert</option>
+                        <option value="message">Messages</option>
+                        <option value="error">Errors</option>
+                    </select>
+                    <button onclick="Admin.clearLogs()" class="btn-danger">Clear Logs</button>
+                </div>
+                <div id="logContainer" class="log-list"></div>
+            </div>
+
+            <!-- Chats Tab -->
+            <div id="chatsTab" class="admin-tab hidden">
+                <div class="chats-layout">
+                    <div class="chat-users-list" id="chatUsersList"></div>
+                    <div class="chat-messages-area" id="chatMessagesArea">
+                        <div class="empty-chat">
+                            <svg viewBox="0 0 24 24" width="60" height="60">
+                                <path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                            </svg>
+                            <p>Foydalanuvchini tanlang</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settingsTab" class="admin-tab hidden">
+                <div class="settings-panel">
+                    <h3 style="margin-bottom: 30px; font-size: 24px;">⚙️ Tizim Sozlamalari</h3>
+                    
+                    <div style="display: grid; gap: 20px;">
+                        <div class="settings-card">
+                            <h4>📊 Ma'lumotlar</h4>
+                            <p>Barcha foydalanuvchi ma'lumotlari, loglar va statistikani eksport qiling</p>
+                            <button onclick="Admin.exportData()" class="btn-primary">📥 Eksport qilish</button>
+                        </div>
+
+                        <div class="settings-card">
+                            <h4>🔔 Bildirishnomalar</h4>
+                            <p>Yangi xabarlar uchun bildirishnomalarni yoqish/o'chirish</p>
+                            <label class="switch">
+                                <input type="checkbox" id="notificationsToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="settings-card danger">
+                            <h4>🗑️ Xavfli Zona</h4>
+                            <p>DIQQAT: Bu barcha ma'lumotlarni o'chiradi!</p>
+                            <button onclick="Admin.clearAllData()" class="btn-danger">⚠️ Barchasini o'chirish</button>
+                        </div>
+
+                        <div class="settings-card">
+                            <h4>📈 Tizim Statistikasi</h4>
+                            <div id="systemStats"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Chat Modal -->
+    <div id="userChatModal" class="modal hidden">
+        <div class="modal-content chat-modal">
+            <div class="modal-header">
+                <h3>💬 Admin bilan Chat</h3>
+                <button onclick="ChatWithAdmin.closeChat()" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="userChatMessages" class="user-chat-messages"></div>
+            </div>
+            <div class="modal-footer">
+                <input type="text" id="userChatInput" placeholder="Xabar yozing..." onkeypress="if(event.key==='Enter') ChatWithAdmin.sendMessage()">
+                <button onclick="ChatWithAdmin.sendMessage()" class="btn-send">
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <p>Yuklanmoqda...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="login.js"></script>
+    <script src="brain.js"></script>
+    <script src="ai.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
